@@ -1,0 +1,21 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/automacao-ia-processos",
+      "destination": "/ia-para-empresas",
+      "permanent": true
+    },
+    {
+      "source": "/automacao-ia-processos/",
+      "destination": "/ia-para-empresas",
+      "permanent": true
+    },
+    {
+      "source": "/automacao-residencial/",
+      "destination": "/automacao-residencial",
+      "permanent": true
+    }
+  ]
+}
