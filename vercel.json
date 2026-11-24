@@ -13,9 +13,75 @@
       "permanent": true
     },
     {
-      "source": "/automacao-residencial/",
+      "source": "/politica-de-privaciade",
+      "destination": "/politica-de-privacidade",
+      "permanent": true
+    },
+    {
+      "source": "/politica-de-privaciade/",
+      "destination": "/politica-de-privacidade",
+      "permanent": true
+    },
+    {
+      "source": "/category/automacao-residencial/:p*",
       "destination": "/automacao-residencial",
       "permanent": true
+    },
+    {
+      "source": "/category/casa-inteligente/:p*",
+      "destination": "/automacao-residencial",
+      "permanent": true
+    },
+    {
+      "source": "/category/inteligencia-artificial/:p*",
+      "destination": "/ia-para-empresas",
+      "permanent": true
+    },
+    {
+      "source": "/category/automacao-de-processos/:p*",
+      "destination": "/ia-para-empresas",
+      "permanent": true
+    },
+    {
+      "source": "/feed/:p*",
+      "destination": "/blog",
+      "permanent": true
+    },
+    {
+      "source": "/blog/feed/:p*",
+      "destination": "/blog",
+      "permanent": true
+    },
+    {
+      "source": "/sitemap_index.xml",
+      "destination": "/sitemap.xml",
+      "permanent": true
+    },
+    {
+      "source": "/wp-sitemap.xml",
+      "destination": "/sitemap.xml",
+      "permanent": true
+    },
+    {
+      "source": "/page-sitemap.xml",
+      "destination": "/sitemap.xml",
+      "permanent": true
+    },
+    {
+      "source": "/post-sitemap.xml",
+      "destination": "/sitemap.xml",
+      "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800, stale-while-revalidate=86400"
+        }
+      ]
     }
   ]
 }

@@ -3,7 +3,7 @@
 import json, pathlib
 
 ROOT = pathlib.Path(__file__).parent
-SITE = "https://www.m7automacao.com.br"
+SITE = "https://m7automacao.com.br"
 WA = "5511968602016"
 
 LOGO = '''<svg viewBox="196 88 262 302" aria-hidden="true"><path fill="rgb(158,180,213)" d="M 349.5 120 L 368.5 120 L 433.5 160 L 448 174.5 L 452 183.5 L 452 350.5 L 432.5 365 L 422.5 375 Q 418.4 378.9 409.5 378 Q 391.8 373.2 377.5 365 L 328 333.5 L 337.5 330 L 359.5 329 L 372.5 332 L 392.5 346 Q 397.9 350.6 407.5 351 L 415 345.5 L 417 341.5 L 417 317.5 L 418 316.5 L 418 240.5 L 417 237.5 L 418 234.5 L 417 233.5 L 417 186.5 L 414.5 184 L 345.5 143 L 322 127.5 L 324.5 124 L 336.5 121 L 348.5 121 L 349.5 120 Z "></path><path fill="rgb(238,69,83)" d="M 312.5 95 L 323.5 95 L 333.5 98 L 366 118.5 L 347 119.5 L 349 120.5 L 345.5 121 Q 343.8 118.3 337.5 120 Q 336 123.5 334.5 121 Q 329.1 119.1 330 122.5 L 328.5 122 Q 317.2 122.7 310.5 128 L 231.5 179 L 223 186.5 L 222 188.5 L 222 344.5 Q 226.2 349.8 234.5 351 L 244.5 347 L 266.5 332 L 294.5 317 L 297.5 314 L 308.5 309 L 317.5 308 L 318.5 309 L 326.5 309 L 349.5 316 L 362.5 322 L 369 327.5 Q 369.9 330.9 364.5 329 L 360.5 330 L 359.5 329 L 344.5 329 L 332.5 332 L 330.5 332 Q 327.2 330.9 328 333.5 L 328.5 335 Q 326.5 331 324.5 335 L 267.5 370 L 244.5 378 L 225.5 379 L 210.5 375 L 198 365.5 L 191 352.5 L 191 182.5 Q 198.1 165.1 212.5 155 L 246.5 131 L 312.5 95 Z "></path><path fill="rgb(238,69,83)" d="M 441.5 167 L 442.5 169 L 441.5 167 Z "></path><path fill="rgb(238,69,83)" d="M 288.5 188 L 345.5 188 Q 356.8 190.8 363 198.5 L 369 211.5 L 369 265.5 Q 366.3 277.8 357.5 284 L 345.5 289 L 287.5 289 Q 274.9 286.6 269 277.5 L 264 265.5 L 264 212.5 Q 266.4 200.4 274.5 194 L 283.5 189 L 288.5 188 Z "></path><path fill="rgb(238,69,83)" d="M 417.5 234 L 418 236.5 L 417 236.5 L 417.5 234 Z "></path><path fill="rgb(238,69,83)" d="M 417.5 240 L 418 272.5 L 417 272.5 L 417.5 240 Z "></path><path fill="rgb(238,69,83)" d="M 417.5 298 L 418 316.5 L 417 316.5 L 417.5 298 Z "></path><path fill="rgb(238,69,83)" d="M 426.5 371 L 425.5 373 L 426.5 371 Z "></path></svg>'''
@@ -62,8 +62,11 @@ def video(key):
   <div class="meta"><span>{tag}</span><strong>{title}</strong></div>
 </a>'''
 
+IMG_SIZES = {"forro-circuito-c22": (1120, 1400), "sala-cena-noturna": (1400, 788), "fechadura-digital": (1120, 1400), "modulo-identificado": (1400, 1050), "interruptor-touch-cenas": (1120, 1400)}
+
 def foto(nome, alt, legenda, cls=""):
-    return f'<figure class="shot {cls}"><img src="assets/img/{nome}.webp" alt="{alt}" loading="lazy" decoding="async"><figcaption>{legenda}</figcaption></figure>'
+    w, h = IMG_SIZES[nome]
+    return f'<figure class="shot {cls}"><img src="assets/img/{nome}.webp" alt="{alt}" width="{w}" height="{h}" loading="lazy" decoding="async"><figcaption>{legenda}</figcaption></figure>'
 
 def card(icon, title, text, tag=None):
     t = f'<span class="tag">{tag}</span>' if tag else ""
@@ -77,10 +80,13 @@ def assistant(flow, title="Assistente M7"):
   <form class="as-input" autocomplete="off"><input id="as-{flow}" type="text" placeholder="Escolha uma opção acima" disabled aria-label="Sua resposta"><button type="submit" disabled aria-label="Enviar">{SEND}</button></form>
 </div>'''
 
+def faq_schema(items):
+    return {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in items]}
+
 def faq(items):
     return '<div class="faq">' + "".join(f"<details><summary>{q}</summary><p>{a}</p></details>" for q, a in items) + "</div>"
 
-def lead_form(assunto, fields_extra, button, note="Seus dados ficam só com a M7. Respondemos em horário comercial."):
+def lead_form(assunto, fields_extra, button, note='Seus dados ficam só com a M7 (<a href="/politica-de-privacidade">política de privacidade</a>). Respondemos das 8h às 20h.'):
     return f'''<form class="lead-form" data-assunto="{assunto}" novalidate>
   <div class="two">
     <div class="field"><label for="f-nome">Nome</label><input id="f-nome" name="nome" required autocomplete="name" placeholder="Como podemos te chamar"></div>
@@ -92,18 +98,21 @@ def lead_form(assunto, fields_extra, button, note="Seus dados ficam só com a M7
   <div class="form-ok" hidden></div>
 </form>'''
 
-def page(slug, title, desc, body, casa=False, schema=None, home=False):
+def page(slug, title, desc, body, casa=False, schema=None, home=False, og_type="website", noindex=False, canon_path=None):
     nav = "".join(f'<a href="{h}"{' aria-current="page"' if h == slug else ''}>{n}</a>' for h, n in NAV)
-    canon = SITE + "/" + ("" if slug == "index.html" else slug.replace(".html", ""))
+    canon = SITE + (canon_path if canon_path is not None else "/" + ("" if slug == "index.html" else slug.replace(".html", "")))
+    og_img = SITE + "/assets/" + ("og-casa.png" if casa else "og-m7.png")
     ld = {
       "@context": "https://schema.org", "@type": "LocalBusiness",
-      "name": "M7 Automação", "url": SITE, "telephone": "+55 11 91301-9826",
+      "@id": SITE + "/#empresa", "name": "M7 Automação", "url": SITE + "/", "telephone": "+55 11 91301-9826",
+      "logo": SITE + "/assets/icon-512.png", "image": SITE + "/assets/og-m7.png", "priceRange": "$$",
       "description": "Automação de processos com inteligência artificial para empresas em todo o Brasil e automação residencial e predial em São Paulo e Grande São Paulo.",
       "areaServed": ["São Paulo", "Grande São Paulo", "Brasil"],
       "address": {"@type": "PostalAddress", "addressLocality": "São Paulo", "addressRegion": "SP", "addressCountry": "BR"},
-      "sameAs": ["https://www.youtube.com/@M7Automação", "https://facebook.com/m7automacao", "https://linkedin.com/company/m7automacao"]
+      "sameAs": ["https://www.youtube.com/@M7Automa%C3%A7%C3%A3o", "https://www.instagram.com/m7automacao/", "https://facebook.com/m7automacao", "https://linkedin.com/company/m7automacao"]
     }
-    extra_ld = f'<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>' if schema else ""
+    schemas = schema if isinstance(schema, list) else ([schema] if schema else [])
+    extra_ld = "".join(f'<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>' for x in schemas)
     fonts = "family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&family=Space+Grotesk:wght@500;600" + ("&family=Manrope:wght@300;600" if casa else "") + "&family=Syne:wght@600;700;800"
     return f'''<!doctype html>
 <html lang="pt-BR">
@@ -115,14 +124,22 @@ def page(slug, title, desc, body, casa=False, schema=None, home=False):
 <link rel="canonical" href="{canon}">
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{desc}">
-<meta property="og:type" content="website">
+<meta property="og:type" content="{og_type}">
+<meta property="og:site_name" content="M7 Automação">
+<meta property="og:image" content="{og_img}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="robots" content="{'noindex, follow' if noindex else 'index, follow, max-image-preview:large'}">
 <meta property="og:url" content="{canon}">
 <meta property="og:locale" content="pt_BR">
 <meta name="theme-color" content="#07090d">
-<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?{fonts}&display=swap">
+<link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preload" href="/assets/fonts/syne-1a8bc9.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/inter-567244.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/fonts.css">
 <link rel="stylesheet" href="assets/style.css">
 <script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>
 {extra_ld}
@@ -148,10 +165,10 @@ def page(slug, title, desc, body, casa=False, schema=None, home=False):
         <p class="mono small">WhatsApp: (11) 96860-2016</p>
       </div>
       <div><h4>Soluções</h4><ul><li><a href="ia-para-empresas.html">IA para empresas</a></li><li><a href="automacao-residencial.html">Automação residencial</a></li><li><a href="condominios.html">Condomínios e prédios</a></li><li><a href="arquitetos.html">Para arquitetos</a></li></ul></div>
-      <div><h4>Conteúdo</h4><ul><li><a href="https://www.youtube.com/@M7Automa%C3%A7%C3%A3o" target="_blank" rel="noopener">YouTube</a></li><li><a href="https://linkedin.com/company/m7automacao" target="_blank" rel="noopener">LinkedIn</a></li><li><a href="https://facebook.com/m7automacao" target="_blank" rel="noopener">Facebook</a></li></ul></div>
+      <div><h4>Conteúdo</h4><ul><li><a href="https://www.youtube.com/@M7Automa%C3%A7%C3%A3o" target="_blank" rel="noopener">YouTube</a></li><li><a href="/blog">Blog</a></li><li><a href="https://www.instagram.com/m7automacao/" target="_blank" rel="noopener">Instagram</a></li><li><a href="https://linkedin.com/company/m7automacao" target="_blank" rel="noopener">LinkedIn</a></li><li><a href="https://facebook.com/m7automacao" target="_blank" rel="noopener">Facebook</a></li></ul></div>
       <div><h4>Atendimento</h4><ul><li>IA: todo o Brasil, online</li><li>Residencial e predial: São Paulo e Grande SP</li><li><a data-wa="Olá! Vim pelo site da M7 Automação.">Chamar no WhatsApp</a></li></ul></div>
     </div>
-    <div class="legal"><span>© 2026 M7 Automação. Todos os direitos reservados.</span><span>Projetos independentes de marca.</span></div>
+    <div class="legal"><span>© 2026 M7 Automação. Todos os direitos reservados.</span><span><a href="/politica-de-privacidade">Política de privacidade</a> · Projetos independentes de marca.</span></div>
   </div>
 </footer>
 <a class="wa-float" aria-label="Falar no WhatsApp" data-wa="Olá! Vim pelo site da M7 Automação."><span class="wa-icon"></span></a>
@@ -664,20 +681,156 @@ PAGES = [
   ("index.html", "M7 Automação | IA para empresas e casas inteligentes em SP", "Agentes de IA que atendem e vendem pela sua empresa e automação residencial e predial sob medida em São Paulo. Converse com nosso assistente.", home, False, None),
   ("ia-para-empresas.html", "Automação de Processos com IA para Pequenas Empresas | M7", "Agentes de IA no WhatsApp, agenda, orçamentos e integrações para micro e pequenas empresas de todo o Brasil. Faça o Raio-X de Automação gratuito.", ia, False, ia_schema),
   ("automacao-residencial.html", "Automação Residencial em São Paulo | M7 Automação", "Iluminação, som, climatização, segurança e Wi-Fi integrados. Projetos de automação residencial sob medida em São Paulo e Grande SP.", res, True, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in res_faq]}),
-  ("condominios.html", "Automação para Condomínios e Prédios em SP | M7 Automação", "Controle de acesso, câmeras, economia de energia e atendimento a moradores com IA para condomínios em São Paulo e Grande SP.", con, True, None),
-  ("arquitetos.html", "Automação para Arquitetos e Projetos de Interiores | M7", "Parceria técnica em automação, áudio e vídeo e rede para escritórios de arquitetura em São Paulo. Infraestrutura pensada desde a planta.", arq, True, None),
+  ("condominios.html", "Automação para Condomínios e Prédios em SP | M7 Automação", "Controle de acesso, câmeras, economia de energia e atendimento a moradores com IA para condomínios em São Paulo e Grande SP.", con, True, faq_schema(con_faq)),
+  ("arquitetos.html", "Automação para Arquitetos e Projetos de Interiores | M7", "Parceria técnica em automação, áudio e vídeo e rede para escritórios de arquitetura em São Paulo. Infraestrutura pensada desde a planta.", arq, True, faq_schema(arq_faq)),
 ]
 
+# ---------- Blog (posts migrados do WordPress, mesmos endereços) ----------
+CONTATO_EMAIL = ""  # e-mail público de contato (definir com o Paulo)
+
+POSTS = [
+  ("automacao-de-processos-por-onde-comecar", "Automação de processos: por onde começar sem complicar a operação",
+   "Saiba como começar a automatizar processos da sua empresa sem complicar a operação e sem depender de grandes projetos logo no início.",
+   "2026-07-07", "IA para empresas", "/ia-para-empresas", "Quero meu Raio-X de Automação", False, '''
+<p><strong>Automação de processos não precisa começar grande. O melhor caminho costuma ser começar pelo que é repetitivo, claro e gera perda de tempo todos os dias.</strong></p>
+<p>Muitas empresas querem automatizar, mas acabam travando porque imaginam que precisam transformar tudo de uma vez. Na prática, uma boa automação começa com um processo específico e um objetivo simples: reduzir esforço manual e aumentar previsibilidade.</p>
+<h2>Identifique os gargalos</h2>
+<p>Observe tarefas que tomam tempo da equipe: preenchimento de planilhas, envio de mensagens, conferência de documentos, consultas em sistemas, geração de relatórios e acompanhamento de status. Esses pontos costumam revelar boas oportunidades.</p>
+<h2>Mapeie antes de automatizar</h2>
+<p>Antes de escolher ferramentas, é importante entender o fluxo atual. Quem participa? Quais informações entram? Quais decisões são tomadas? Qual resultado precisa ser entregue? Esse mapeamento evita automações confusas ou pouco úteis.</p>
+<h2>Conecte ferramentas e pessoas</h2>
+<p>Uma automação eficiente integra sistemas, organiza informações e mantém as pessoas certas no controle das decisões importantes. A tecnologia deve simplificar a operação, não criar mais uma camada de complexidade.</p>
+<h2>Evolua por etapas</h2>
+<p>Começar pequeno permite testar, corrigir e ampliar com segurança. Depois que um fluxo funciona bem, a empresa pode evoluir para automações mais completas, incluindo <a href="/ia-para-empresas">agentes de IA</a>, integrações entre sistemas e dashboards de acompanhamento.</p>
+<p><strong>A M7 Automação desenvolve soluções para automatizar processos reais</strong>, com foco em eficiência, clareza e aplicação prática da tecnologia.</p>'''),
+  ("inteligencia-artificial-reduzir-tarefas-manuais", "Como a inteligência artificial pode reduzir tarefas manuais na sua empresa",
+   "Entenda como a inteligência artificial pode reduzir tarefas manuais, organizar informações e aumentar a produtividade da sua empresa.",
+   "2026-07-07", "IA para empresas", "/ia-para-empresas", "Quero meu Raio-X de Automação", False, '''
+<p><strong>A inteligência artificial começa a gerar valor quando deixa de ser apenas uma ferramenta isolada e passa a atuar dentro dos processos reais da empresa.</strong></p>
+<p>Em muitas empresas, equipes gastam horas todos os dias com tarefas repetitivas: copiar informações, responder dúvidas recorrentes, consultar sistemas, montar relatórios, conferir dados e acompanhar status de processos.</p>
+<h2>Menos tarefas manuais</h2>
+<p>Com a IA aplicada de forma correta, parte dessas atividades pode ser automatizada. Isso reduz retrabalho, melhora a velocidade da operação e libera a equipe para focar em decisões, atendimento e estratégia.</p>
+<h2>Informação mais fácil de encontrar</h2>
+<p>Agentes inteligentes podem ajudar a consultar documentos, bases de dados, históricos, mensagens e sistemas internos. Em vez de procurar informação em vários lugares, a empresa passa a ter respostas mais rápidas e organizadas.</p>
+<h2>Automação com IA precisa de processo</h2>
+<p>O melhor resultado não vem apenas de instalar uma ferramenta nova. É necessário entender o fluxo da empresa, identificar gargalos e conectar a inteligência artificial aos pontos certos da operação. Veja também <a href="/automacao-de-processos-por-onde-comecar">por onde começar a automatizar processos</a>.</p>
+<h2>Comece pequeno, evolua com segurança</h2>
+<p>Uma boa estratégia é começar com processos bem definidos e de alto impacto, como atendimento, análise de documentos, geração de relatórios, acompanhamento de solicitações e integração entre ferramentas.</p>
+<p><strong>A M7 Automação ajuda empresas a transformar IA em resultado prático</strong>, criando soluções conectadas à rotina real do negócio.</p>'''),
+  ("automacao-residencial-conforto-seguranca-economia", "Como a automação residencial transforma conforto, segurança e economia",
+   "Um guia completo sobre como a automação residencial pode aumentar conforto, segurança, controle e economia em casas inteligentes.",
+   "2026-07-07", "Automação residencial", "/automacao-residencial", "Quero um projeto para minha casa", True, '''
+<p><strong>Uma casa inteligente não é apenas uma casa cheia de equipamentos. É um ambiente que trabalha a favor da sua rotina.</strong></p>
+<p>A automação residencial deixou de ser um recurso distante ou reservado a grandes projetos. Hoje, ela pode ser aplicada de forma personalizada para trazer mais conforto, segurança, praticidade e economia no dia a dia.</p>
+<h2>Conforto que aparece nos detalhes</h2>
+<p>Imagine chegar em casa e encontrar a iluminação ajustada, a climatização agradável, as cortinas posicionadas e os principais ambientes prontos para o seu uso. A automação permite criar cenas para diferentes momentos, como receber visitas, assistir a um filme, trabalhar ou descansar.</p>
+<h2>Mais segurança e controle</h2>
+<p>Sensores, câmeras, fechaduras eletrônicas, iluminação automática e alertas inteligentes ajudam a ampliar o controle sobre a residência. Mesmo fora de casa, é possível acompanhar informações importantes e acionar recursos à distância.</p>
+<h2>Economia sem perder conforto</h2>
+<p>Uma casa automatizada também pode ser mais eficiente. Luzes e equipamentos podem ser configurados para funcionar apenas quando necessário, reduzindo desperdícios e ajudando no uso mais inteligente da energia.</p>
+<h2>Projeto sob medida faz diferença</h2>
+<p>Cada residência tem uma rotina, uma estrutura e uma necessidade diferente. Por isso, a M7 Automação trabalha com <a href="/automacao-residencial">projetos de automação residencial personalizados</a>, escolhendo as soluções mais adequadas para cada cliente, sem depender de pacotes prontos.</p>
+<p><strong>Quer transformar sua casa em um ambiente mais inteligente?</strong> Fale com a M7 Automação e descubra as possibilidades para o seu projeto.</p>'''),
+]
+
+def head_block(eyebrow, h1, lead=""):
+    l = f'<p class="lead">{lead}</p>' if lead else ""
+    return f'<section class="band page-head"><div class="wrap narrow stack" style="gap:18px"><span class="eyebrow">{eyebrow}</span><h1>{h1}</h1>{l}</div></section>'
+
+def crumbs(items):
+    return {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": i + 1, "name": n, "item": SITE + u} for i, (n, u) in enumerate(items)]}
+
+def data_br(d):
+    y, m, dd = d.split("-"); meses = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"]
+    return f"{int(dd)} de {meses[int(m)-1]} de {y}"
+
+EXTRA = []  # (slug, title, desc, body, casa, schema, kwargs)
+for slug, t, d, date, cat, cta_url, cta_txt, casa, html in POSTS:
+    body = head_block(f"Blog · {cat}", t, f'<time datetime="{date}">{data_br(date)}</time> · M7 Automação') + f'''
+<section class="band" style="border-top:0;padding-top:0"><div class="wrap narrow"><article class="prose">{html}</article>
+<div class="post-cta"><p>Quer aplicar isso no seu caso?</p><a class="btn btn-red" href="{cta_url}">{cta_txt} {ARROW}</a></div>
+<p class="small" style="margin-top:32px"><a href="/blog">← Todos os artigos</a></p></div></section>'''
+    schema = [{"@context": "https://schema.org", "@type": "BlogPosting", "headline": t, "description": d, "datePublished": date, "dateModified": date,
+               "author": {"@type": "Organization", "name": "M7 Automação", "url": SITE + "/"}, "publisher": {"@id": SITE + "/#empresa"},
+               "mainEntityOfPage": SITE + "/" + slug, "image": SITE + "/assets/" + ("og-casa.png" if casa else "og-m7.png"), "inLanguage": "pt-BR"},
+              crumbs([("Início", "/"), ("Blog", "/blog"), (t, "/" + slug)])]
+    EXTRA.append((slug + ".html", f"{t} | M7", d, body, casa, schema, {"og_type": "article"}))
+
+blog_list = "".join(f'<a class="post-item" href="/{s}"><span class="eyebrow">{c}</span><h2>{t}</h2><p>{d}</p><small>{data_br(dt)}</small></a>' for s, t, d, dt, c, *_ in POSTS)
+EXTRA.append(("blog.html", "Blog M7 Automação | IA para empresas e casa inteligente", "Artigos práticos sobre automação de processos com IA para pequenas empresas e automação residencial em São Paulo.",
+  head_block("Blog", "Ideias práticas de <strong>automação.</strong>", "IA aplicada à rotina das pequenas empresas e casas que se ajustam a você.") +
+  f'<section class="band" style="border-top:0;padding-top:0"><div class="wrap narrow"><div class="post-list">{blog_list}</div></div></section>', False,
+  crumbs([("Início", "/"), ("Blog", "/blog")]), {}))
+
+contato_priv = 'fale com a gente pelo <a data-wa="Olá! Tenho uma dúvida sobre meus dados na M7 Automação.">WhatsApp</a>' + (f' ou pelo e-mail <a href="mailto:{CONTATO_EMAIL}">{CONTATO_EMAIL}</a>' if CONTATO_EMAIL else "")
+EXTRA.append(("politica-de-privacidade.html", "Política de Privacidade | M7 Automação", "Como a M7 Automação coleta, usa e protege os dados enviados pelo site, pelo WhatsApp e pelas integrações com redes sociais.",
+  head_block("Privacidade e LGPD", "Política de privacidade", "Última atualização: 24 de novembro de 2026") + f'''
+<section class="band" style="border-top:0;padding-top:0"><div class="wrap narrow"><article class="prose">
+<p>A M7 Automação respeita a sua privacidade e trata dados pessoais de acordo com a Lei Geral de Proteção de Dados (Lei 13.709/2018). Esta política explica quais dados coletamos, para quê e quais são os seus direitos.</p>
+<h2>1. Dados que coletamos pelo site</h2>
+<p>Quando você preenche um formulário, conversa com o assistente do site ou clica para falar no WhatsApp, podemos receber: nome, número de WhatsApp, empresa ou tipo de imóvel, a página de origem e as informações que você escrever na mensagem. Não coletamos documentos, dados bancários nem dados sensíveis.</p>
+<h2>2. Para que usamos</h2>
+<ul><li>Entrar em contato com você pelo WhatsApp para entender a necessidade e responder ao seu pedido;</li><li>Preparar diagnósticos, propostas e orçamentos;</li><li>Registrar o histórico do atendimento para não pedir as mesmas informações de novo.</li></ul>
+<p>A base legal é o seu pedido de contato (procedimentos preliminares a um contrato) e o nosso legítimo interesse em responder a quem nos procurou.</p>
+<h2>3. Atendimento com assistente virtual</h2>
+<p>O primeiro contato pelo WhatsApp pode ser feito pelo Miguelzinho, o assistente virtual da M7, sempre com supervisão da nossa equipe. Se preferir não receber mensagens, basta responder "parar" e o contato é encerrado.</p>
+<h2>4. Com quem compartilhamos</h2>
+<p>Não vendemos nem cedemos seus dados. Eles são armazenados e processados em fornecedores de tecnologia que nos ajudam a operar (hospedagem do site, banco de dados, ferramenta de automação e provedor de WhatsApp), apenas para as finalidades acima.</p>
+<h2>5. Por quanto tempo guardamos</h2>
+<p>Mantemos os dados enquanto houver relação comercial ou interesse no atendimento e, depois disso, pelo prazo exigido por lei. Você pode pedir a exclusão a qualquer momento.</p>
+<h2>6. Seus direitos</h2>
+<p>Você pode pedir acesso, correção, exclusão ou informação sobre o uso dos seus dados, e revogar o consentimento, pelo contato abaixo.</p>
+<h2>7. Aplicativo "Automação M7" e LinkedIn</h2>
+<p>O aplicativo Automação M7 integra nossos sistemas internos à API do LinkedIn com um único objetivo: publicar notícias e conteúdos na página oficial da empresa (<a href="https://www.linkedin.com/company/79408366" target="_blank" rel="noopener">linkedin.com/company/79408366</a>). Ele usa apenas tokens de acesso e os dados básicos de identificação da página, necessários para publicar no destino correto. O aplicativo não coleta, não armazena e não monitora dados de seguidores, visitantes ou terceiros. Os tokens não são compartilhados, ficam guardados de forma segura e o administrador da página pode revogar o acesso a qualquer momento nas configurações do LinkedIn.</p>
+<h2>8. Cookies</h2>
+<p>O site não usa cookies de publicidade. Vídeos incorporados do YouTube usam o modo de privacidade reforçada.</p>
+<h2>9. Contato</h2>
+<p>Dúvidas ou pedidos sobre seus dados: {contato_priv}.</p>
+</article></div></section>''', False, None, {}))
+
+CARD_LINKS = [("Celular", "tel:+5511913019826"), ("WhatsApp", "https://wa.me/5511913019826")] + ([("E-mail", "mailto:" + CONTATO_EMAIL)] if CONTATO_EMAIL else []) + [
+              ("Instagram", "https://www.instagram.com/m7automacao/"), ("LinkedIn", "https://linkedin.com/company/m7automacao"), ("Site", "/")]
+def _a(n, u):
+    ext = ' target="_blank" rel="noopener"' if u.startswith("http") else ""
+    return f'<a class="btn btn-glass" href="{u}"{ext}>{n}</a>'
+EXTRA.append(("apresentacao.html", "Paulo Nistal | M7 Automação", "Cartão de contato de Paulo Nistal, M7 Automação.",
+  f'''<section class="band page-head"><div class="wrap narrow stack card-vc" style="gap:14px;align-items:center;text-align:center">
+<span class="vc-logo">{LOGO}</span><h1>Paulo Nistal</h1><p class="lead">Diretor Técnico · M7 Automação</p>
+<div class="vc-links">{"".join(_a(n, u) for n, u in CARD_LINKS)}</div>
+</div></section>''', False, None, {"noindex": True}))
+
+EXTRA.append(("404.html", "Página não encontrada | M7 Automação", "Esta página não existe mais.",
+  head_block("Erro 404", "Essa página <strong>não existe mais.</strong>", "O site da M7 foi renovado. Escolha por onde continuar:") +
+  '''<section class="band" style="border-top:0;padding-top:0"><div class="wrap narrow"><div class="row" style="flex-wrap:wrap;gap:12px">
+<a class="btn btn-red" href="/">Início</a><a class="btn btn-glass" href="/ia-para-empresas">IA para empresas</a><a class="btn btn-glass" href="/automacao-residencial">Automação residencial</a><a class="btn btn-glass" href="/condominios">Condomínios</a><a class="btn btn-glass" href="/arquitetos">Arquitetos</a><a class="btn btn-glass" href="/blog">Blog</a></div></div></section>''',
+  False, None, {"noindex": True, "canon_path": "/404"}))
+
+import re as _re
+SLUGS = [s.replace(".html", "") for s, *_ in PAGES] + [s.replace(".html", "") for s, *_ in EXTRA]
+def clean_links(html):
+    html = _re.sub(r'(href|src)="assets/', r'\1="/assets/', html)
+    html = html.replace('href="index.html"', 'href="/"')
+    return _re.sub(r'href="(' + "|".join(_re.escape(x) for x in SLUGS if x != "index") + r')\.html(#[^"]*)?"', lambda m: f'href="/{m.group(1)}{m.group(2) or ""}"', html)
+
 for slug, title, desc, body, casa, schema in PAGES:
-    (ROOT / slug).write_text(page(slug, title, desc, body, casa, schema, home=(slug == "index.html")), encoding="utf-8")
+    (ROOT / slug).write_text(clean_links(page(slug, title, desc, body, casa, schema, home=(slug == "index.html"))), encoding="utf-8")
+for slug, title, desc, body, casa, schema, kw in EXTRA:
+    (ROOT / slug).write_text(clean_links(page(slug, title, desc, body, casa, schema, **kw)), encoding="utf-8")
 
 (ROOT / "assets" / "logo.svg").write_text(LOGO.replace('aria-hidden="true"', 'xmlns="http://www.w3.org/2000/svg"'), encoding="utf-8")
 (ROOT / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {SITE}/sitemap.xml\n", encoding="utf-8")
-urls = "".join(f"<url><loc>{SITE}/{'' if s == 'index.html' else s.replace('.html','')}</loc></url>" for s, *_ in PAGES)
+import datetime as _dt
+HOJE = _dt.date.today().isoformat()
+SITEMAP = [("", HOJE)] + [(s.replace(".html", ""), HOJE) for s, *_ in PAGES[1:]] + [("blog", HOJE)] + [(p[0], p[3]) for p in POSTS] + [("politica-de-privacidade", HOJE)]
+urls = "".join(f"<url><loc>{SITE}/{u}</loc><lastmod>{d}</lastmod></url>" for u, d in SITEMAP)
 (ROOT / "sitemap.xml").write_text(f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>\n', encoding="utf-8")
+R = lambda a, b: {"source": a, "destination": b, "permanent": True}
 (ROOT / "vercel.json").write_text(json.dumps({"cleanUrls": True, "trailingSlash": False, "redirects": [
-  {"source": "/automacao-ia-processos", "destination": "/ia-para-empresas", "permanent": True},
-  {"source": "/automacao-ia-processos/", "destination": "/ia-para-empresas", "permanent": True},
-  {"source": "/automacao-residencial/", "destination": "/automacao-residencial", "permanent": True}
-]}, indent=2), encoding="utf-8")
-print("ok", [p[0] for p in PAGES])
+  R("/automacao-ia-processos", "/ia-para-empresas"), R("/automacao-ia-processos/", "/ia-para-empresas"),
+  R("/politica-de-privaciade", "/politica-de-privacidade"), R("/politica-de-privaciade/", "/politica-de-privacidade"),
+  R("/category/automacao-residencial/:p*", "/automacao-residencial"), R("/category/casa-inteligente/:p*", "/automacao-residencial"),
+  R("/category/inteligencia-artificial/:p*", "/ia-para-empresas"), R("/category/automacao-de-processos/:p*", "/ia-para-empresas"),
+  R("/feed/:p*", "/blog"), R("/blog/feed/:p*", "/blog"),
+  R("/sitemap_index.xml", "/sitemap.xml"), R("/wp-sitemap.xml", "/sitemap.xml"), R("/page-sitemap.xml", "/sitemap.xml"), R("/post-sitemap.xml", "/sitemap.xml"),
+], "headers": [{"source": "/assets/(.*)", "headers": [{"key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=86400"}]}]}, indent=2), encoding="utf-8")
+print("ok", [p[0] for p in PAGES] + [e[0] for e in EXTRA])
