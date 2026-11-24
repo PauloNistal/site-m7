@@ -105,7 +105,7 @@ def page(slug, title, desc, body, casa=False, schema=None, home=False, og_type="
     ld = {
       "@context": "https://schema.org", "@type": "LocalBusiness",
       "@id": SITE + "/#empresa", "name": "M7 Automação", "url": SITE + "/", "telephone": "+55 11 91301-9826",
-      "logo": SITE + "/assets/icon-512.png", "image": SITE + "/assets/og-m7.png", "priceRange": "$$",
+      "email": "contato@m7automacao.com.br", "logo": SITE + "/assets/icon-512.png", "image": SITE + "/assets/og-m7.png", "priceRange": "$$",
       "description": "Automação de processos com inteligência artificial para empresas em todo o Brasil e automação residencial e predial em São Paulo e Grande São Paulo.",
       "areaServed": ["São Paulo", "Grande São Paulo", "Brasil"],
       "address": {"@type": "PostalAddress", "addressLocality": "São Paulo", "addressRegion": "SP", "addressCountry": "BR"},
@@ -686,7 +686,7 @@ PAGES = [
 ]
 
 # ---------- Blog (posts migrados do WordPress, mesmos endereços) ----------
-CONTATO_EMAIL = ""  # e-mail público de contato (definir com o Paulo)
+CONTATO_EMAIL = "contato@m7automacao.com.br"
 
 POSTS = [
   ("automacao-de-processos-por-onde-comecar", "Automação de processos: por onde começar sem complicar a operação",
