@@ -746,20 +746,38 @@ def data_br(d):
 
 EXTRA = []  # (slug, title, desc, body, casa, schema, kwargs)
 for slug, t, d, date, cat, cta_url, cta_txt, casa, html in POSTS:
-    body = head_block(f"Blog · {cat}", t, f'<time datetime="{date}">{data_br(date)}</time> · M7 Automação') + f'''
-<section class="band" style="border-top:0;padding-top:0"><div class="wrap narrow"><article class="prose">{html}</article>
-<div class="post-cta"><p>Quer aplicar isso no seu caso?</p><a class="btn btn-red" href="{cta_url}">{cta_txt} {ARROW}</a></div>
-<p class="small" style="margin-top:32px"><a href="/blog">← Todos os artigos</a></p></div></section>'''
+    import re as _r, unicodedata as _u
+    def _slugify(x):
+        x = _u.normalize("NFKD", x).encode("ascii", "ignore").decode().lower()
+        return _r.sub(r"[^a-z0-9]+", "-", x).strip("-")
+    heads = _r.findall(r"<h2>(.*?)</h2>", html)
+    html_ids = _r.sub(r"<h2>(.*?)</h2>", lambda m: f'<h2 id="{_slugify(m.group(1))}">{m.group(1)}</h2>', html)
+    html_ids = html_ids.replace("<p><strong>", '<p class="intro"><strong>', 1)
+    words = len(_r.sub(r"<[^>]+>", " ", html).split()); mins = max(2, round(words / 200))
+    toc = "".join(f'<li><a href="#{_slugify(h)}">{h}</a></li>' for h in heads)
+    body = f'''<section class="post-hero{' casa-tone' if casa else ''}"><div class="wrap">
+<nav class="crumbs" aria-label="Você está em"><a href="/">Início</a><span>/</span><a href="/blog">Blog</a><span>/</span><span>{cat}</span></nav>
+<h1>{t}</h1><p class="post-sub">{d}</p>
+<div class="post-meta"><span class="chip">{cat}</span><span><time datetime="{date}">{data_br(date)}</time></span><span>{mins} min de leitura</span></div>
+</div></section>
+<section class="post-body"><div class="wrap post-grid">
+<article class="prose">{html_ids}
+<div class="post-cta"><div><b>Quer aplicar isso no seu caso?</b><p>Conte rapidinho o seu cenário e a gente mostra por onde começar.</p></div><a class="btn btn-red" href="{cta_url}">{cta_txt} {ARROW}</a></div>
+</article>
+<aside class="post-side"><div class="side-box"><span class="side-title">Neste artigo</span><ol>{toc}</ol></div>
+<div class="side-box side-cta"><b>Fale com a M7</b><p>Respondemos pelo WhatsApp das 8h às 20h.</p><a class="btn btn-wa btn-sm" data-wa="Olá! Li o artigo &quot;{t}&quot; no site e quero conversar."><span class="wa-icon"></span> WhatsApp</a></div>
+<a class="side-back" href="/blog">← Todos os artigos</a></aside>
+</div></section>'''
     schema = [{"@context": "https://schema.org", "@type": "BlogPosting", "headline": t, "description": d, "datePublished": date, "dateModified": date,
                "author": {"@type": "Organization", "name": "M7 Automação", "url": SITE + "/"}, "publisher": {"@id": SITE + "/#empresa"},
                "mainEntityOfPage": SITE + "/" + slug, "image": SITE + "/assets/" + ("og-casa.png" if casa else "og-m7.png"), "inLanguage": "pt-BR"},
               crumbs([("Início", "/"), ("Blog", "/blog"), (t, "/" + slug)])]
     EXTRA.append((slug + ".html", f"{t} | M7", d, body, casa, schema, {"og_type": "article"}))
 
-blog_list = "".join(f'<a class="post-item" href="/{s}"><span class="eyebrow">{c}</span><h2>{t}</h2><p>{d}</p><small>{data_br(dt)}</small></a>' for s, t, d, dt, c, *_ in POSTS)
+blog_list = "".join(f'<a class="post-card{" casa-tone" if cs else ""}" href="/{s}"><div class="pc-top"><span class="chip">{c}</span><span class="pc-date">{data_br(dt)}</span></div><h2>{t}</h2><p>{d}</p><span class="pc-more">Ler artigo {ARROW}</span></a>' for s, t, d, dt, c, _u1, _u2, cs, _h in POSTS)
 EXTRA.append(("blog.html", "Blog M7 Automação | IA para empresas e casa inteligente", "Artigos práticos sobre automação de processos com IA para pequenas empresas e automação residencial em São Paulo.",
-  head_block("Blog", "Ideias práticas de <strong>automação.</strong>", "IA aplicada à rotina das pequenas empresas e casas que se ajustam a você.") +
-  f'<section class="band" style="border-top:0;padding-top:0"><div class="wrap narrow"><div class="post-list">{blog_list}</div></div></section>', False,
+  '<section class="post-hero"><div class="wrap"><nav class="crumbs" aria-label="Você está em"><a href="/">Início</a><span>/</span><span>Blog</span></nav><h1>Ideias práticas de <strong>automação.</strong></h1><p class="post-sub">IA aplicada à rotina das pequenas empresas e casas que se ajustam a você.</p></div></section>' +
+  f'<section class="post-body"><div class="wrap"><div class="post-cards">{blog_list}</div></div></section>', False,
   crumbs([("Início", "/"), ("Blog", "/blog")]), {}))
 
 contato_priv = 'fale com a gente pelo <a data-wa="Olá! Tenho uma dúvida sobre meus dados na M7 Automação.">WhatsApp</a>' + (f' ou pelo e-mail <a href="mailto:{CONTATO_EMAIL}">{CONTATO_EMAIL}</a>' if CONTATO_EMAIL else "")
