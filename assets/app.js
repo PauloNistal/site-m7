@@ -52,6 +52,14 @@ document.querySelectorAll("form.lead-form").forEach((form) => {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const data = Object.fromEntries(new FormData(form).entries());
+    const ok0 = form.querySelector(".form-ok");
+    const digitos = String(data.whatsapp || "").replace(/\D/g, "");
+    if (("nome" in data && !String(data.nome).trim()) || ("whatsapp" in data && digitos.length < 10)) {
+      if (ok0) { ok0.hidden = false; ok0.textContent = "Preencha seu nome e um WhatsApp com DDD para o Miguelzinho conseguir te chamar."; }
+      const alvo = !String(data.nome || "").trim() ? form.querySelector("[name=nome]") : form.querySelector("[name=whatsapp]");
+      if (alvo) alvo.focus();
+      return;
+    }
     const assunto = form.dataset.assunto || "Contato pelo site";
     const linhas = [assunto, ""];
     for (const [k, v] of Object.entries(data)) if (v) linhas.push(k.charAt(0).toUpperCase() + k.slice(1) + ": " + v);
