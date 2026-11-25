@@ -268,3 +268,11 @@ document.querySelectorAll(".wa-icon").forEach((s) => { s.outerHTML = WA_ICON; })
     words[i].classList.add("on"); i++;
   }, 420);
 })();
+
+/* IA no Colégio: abas das trilhas */
+document.querySelectorAll("[data-tabs]").forEach((box) => {
+  const tabs = box.querySelectorAll('[role="tab"]');
+  tabs.forEach((t) => t.addEventListener("click", () => {
+    tabs.forEach((x) => { const on = x === t; x.classList.toggle("on", on); x.setAttribute("aria-selected", String(on)); const p = document.getElementById(x.getAttribute("aria-controls")); p.hidden = !on; p.classList.toggle("on", on); });
+  }));
+});
