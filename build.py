@@ -755,6 +755,9 @@ def data_br(d):
     return f"{int(dd)} de {meses[int(m)-1]} de {y}"
 
 EXTRA = []  # (slug, title, desc, body, casa, schema, kwargs)
+# IA no Colégio: 3 versões para o Paulo escolher (fora do sitemap, sem indexação)
+for _v, _b in _pb.VERSOES_COL.items():
+    EXTRA.append((f"ia-no-colegio-v{_v}.html", f"IA no Colégio (versão {_v}) | M7", "Curso extracurricular de IA dentro do colégio. Agende uma conversa.", _b, False, None, {"noindex": True, "canon_path": "/ia-no-colegio"}))
 for slug, t, d, date, cat, cta_url, cta_txt, casa, html in POSTS:
     import re as _r, unicodedata as _u
     def _slugify(x):

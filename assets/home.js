@@ -51,6 +51,7 @@
         [8, 12.2, 16.4].forEach((x) => { o.beginPath(); o.arc(S * (.08 + .84 * x / 24), S * (.08 + .84 * 11.5 / 24), S * .045, 0, 7); o.fill(); });
         o.globalCompositeOperation = "source-over";
       }, n);
+      shapes.cap = sample(icon("M5 13.2v4L12 21l7-3.8v-4L12 17ZM12 3 1 9l11 6 9-4.9V17h2V9Z", true), n);
       shapes.house = sample(icon("M12 2.5 1.8 11.2h2.9V21.5h5.8v-6.2h3v6.2h5.8V11.2h2.9Z", true), n);
       shapes.building = sample((o, S) => {
         icon("M5 22V4.5L12 2l7 2.5V22Z", true)(o, S);
