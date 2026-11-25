@@ -1,8 +1,6 @@
-# IA no Colégio: 3 versões da landing para o Paulo escolher (25/11/2026).
-# Todas seguem a identidade do site (fundo escuro, Syne, azul gelo e vermelho M7) e mudam o efeito principal:
-#   v1 "Desbloqueio": partículas formam o capelo e o M7, texto que se decifra, cards com holofote no mouse.
-#   v2 "Aurora": luz de palco com aurora, título que surge do desfoque, chat que mostra o método, bento com borda brilhante.
-#   v3 "Código": grade com feixes de luz, terminal que reescreve a regra, faixa rolante, trilhas numa linha do tempo.
+# IA no Colégio: landing escolhida pelo Paulo (versão 2 "Aurora", 25/11/2026), no estilo do site.
+# Luz de palco com aurora, título que surge do desfoque, chat que mostra o método, lousa animada
+# (a frase "É proibido usar IA" é apagada e vira uma rede de IA) e trilhas em bento com borda brilhante.
 # Sem preço (apresentação comercial). CTA: agendar conversa (WhatsApp com código SITE-COLEGIO pelo app.js).
 
 CSS = '<link rel="stylesheet" href="/assets/colegio.css"><script src="/assets/colegio.js" defer></script>'
@@ -66,15 +64,8 @@ def proibir(v):
 
 
 def trilhas(v):
-    if v == 1:
-        cards = "".join(trilha_card(t, i, "cv-tr cv-spot") for i, t in enumerate(TR))
-        grid = f'<div class="cv-tr-grid g1" data-spot>{cards}</div>'
-    elif v == 2:
-        cards = "".join(trilha_card(t, i, "cv-tr cv-shine") for i, t in enumerate(TR))
-        grid = f'<div class="cv-bento">{cards}</div>'
-    else:
-        cards = "".join(f'<div class="cv-tl-item"><span class="cv-tl-dot" aria-hidden="true"></span>{trilha_card(t, i, "cv-tr cv-tl-card")}</div>' for i, t in enumerate(TR))
-        grid = f'<div class="cv-tl" data-tl><div class="cv-tl-line" aria-hidden="true"><i></i></div>{cards}</div>'
+    cards = "".join(trilha_card(t, i, "cv-tr cv-shine") for i, t in enumerate(TR))
+    grid = f'<div class="cv-bento">{cards}</div>'
     return f'''<section class="x-sec cv-tr-sec" id="trilhas">
   <div class="wrap">
     <div class="x-head reveal"><span class="x-label">A proposta</span><h2 class="x-h2">Quatro trilhas. Uma para cada <em>fase</em> do colégio.</h2><p class="lead">Do 3º ano do fundamental ao ensino médio, e uma trilha para os professores. O colégio escolhe uma trilha ou monta o programa completo.</p></div>
@@ -161,23 +152,38 @@ def faqsec(faq, col_faq):
 </section>'''
 
 
-# ---------------- HEROS ----------------
-def hero1(ARROW):
-    return f'''<section class="x-hero cv-h1" data-shapes="cap,m7">
-  <div class="x-grid" aria-hidden="true"></div>
-  <canvas id="swarm" aria-hidden="true"></canvas>
+
+def lousa():
+    nodes = [(170, 110, "criar"), (830, 110, "pesquisar"), (200, 300, "checar fontes"), (810, 300, "apresentar"), (500, 70, "perguntar")]
+    lines = "".join(f'<path class="lz-ln" style="--k:{i}" d="M500 210 L{x} {y}"/>' for i, (x, y, _) in enumerate(nodes))
+    dots = "".join(f'<circle class="lz-pulse" r="4" style="--k:{i};offset-path:path(\'M500 210 L{x} {y}\')"/>' for i, (x, y, _) in enumerate(nodes))
+    nds = "".join(f'<g class="lz-nd" style="--k:{i}"><circle cx="{x}" cy="{y}" r="9"/><text x="{x}" y="{y + (34 if y > 200 else -22)}" text-anchor="middle">{t}</text></g>' for i, (x, y, t) in enumerate(nodes))
+    return f'''<section class="x-sec cv-lousa-sec">
   <div class="wrap">
-    <div class="x-copy">
-      <span class="x-kicker"><i></i><span class="cv-scr" data-scramble="IA no Colégio · curso da M7|IA com criatividade|IA com pensamento crítico|IA com responsabilidade">IA no Colégio · curso da M7</span></span>
-      <h1 class="x-title">Muitas escolas <span class="cv-ban">proíbem</span> a IA. Nós <em>ensinamos</em> a usar.</h1>
-      <p class="x-sub">Curso extracurricular de inteligência artificial dentro do colégio, do 3º ano do fundamental ao ensino médio, com uma trilha para professores. Criatividade, pensamento crítico e responsabilidade, com projetos que os pais vão ver.</p>
-      <div class="x-cta"><a class="btn btn-glow" href="#conversa">Agendar uma conversa {ARROW}</a><a class="btn btn-glass" href="#trilhas">Ver as 4 trilhas</a></div>
+    <div class="x-head reveal"><span class="x-label">Na lousa</span><h2 class="x-h2">Apagamos a proibição. Escrevemos <em>o método</em>.</h2></div>
+    <div class="cv-lousa" data-lousa>
+      <svg viewBox="0 0 1000 420" role="img" aria-label="Na lousa, a frase É proibido usar IA é apagada e no lugar surge uma rede ligando a IA a criar, pesquisar, checar fontes, perguntar e apresentar.">
+        <defs>
+          <filter id="giz"><feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="2" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.6"/></filter>
+          <mask id="lz-mask"><rect width="1000" height="420" fill="#fff"/><rect class="lz-trail" width="1000" height="420" fill="#000"/></mask>
+        </defs>
+        <g class="lz-ban" mask="url(#lz-mask)" filter="url(#giz)">
+          <text class="lz-ban-t" x="500" y="225" text-anchor="middle">É PROIBIDO USAR IA</text>
+          <path class="lz-ban-u" d="M190 262 Q500 280 810 258"/>
+        </g>
+        <g class="lz-eraser"><rect x="-80" y="150" width="120" height="150" rx="14"/><rect x="-80" y="270" width="120" height="30" rx="8" class="lz-felt"/></g>
+        <g class="lz-net" filter="url(#giz)">{lines}{nds}
+          <circle class="lz-core" cx="500" cy="210" r="34"/><text class="lz-core-t" x="500" y="222" text-anchor="middle">IA</text>
+        </g>
+        <g class="lz-pulses">{dots}</g>
+        <g class="lz-end" filter="url(#giz)"><text x="500" y="392" text-anchor="middle">IA com método.</text><path d="M392 404 Q500 414 608 402"/></g>
+      </svg>
+      <span class="cv-lousa-chalk" aria-hidden="true"></span>
     </div>
   </div>
-  <div class="x-hint" aria-hidden="true">Passe o mouse<br>sobre as partículas</div>
 </section>'''
 
-
+# ---------------- HERO ----------------
 def hero2(ARROW):
     words = "A IA não é o problema da escola.".split()
     h = " ".join(f'<span style="--d:{i*90}ms">{w}</span>' for i, w in enumerate(words))
@@ -200,53 +206,16 @@ def hero2(ARROW):
 </section>'''
 
 
-def hero3(ARROW):
-    beams = "".join(f'<i style="--x:{x}%;--d:{d}s;--t:{t}s"></i>' for x, d, t in [(12, 0, 6), (31, 2.2, 7), (54, 1.1, 5.5), (73, 3.4, 6.5), (90, .6, 7.5)])
-    lines = [
-      ('c', '# regulamento do colégio'),
-      ('r', '- proibido usar inteligência artificial'),
-      ('m', '  resultado: o aluno usa escondido'),
-      ('c', '# nova regra, com a M7'),
-      ('g', '+ IA em aula, com método'),
-      ('g', '+ criatividade'),
-      ('g', '+ pensamento crítico'),
-      ('g', '+ responsabilidade'),
-      ('p', '> iniciar IA no Colégio'),
-    ]
-    term = "".join(f'<span class="t-{c}">{t}</span>' for c, t in lines)
-    return f'''<section class="cv-h3">
-  <div class="cv-beams" aria-hidden="true"><div class="cv-g"></div>{beams}</div>
-  <div class="wrap cv-h3-grid">
-    <div class="stack" style="gap:24px">
-      <span class="x-label cv-lbl">IA no Colégio · curso extracurricular da M7</span>
-      <h1 class="cv-h3-t">Proibir não é <span class="cv-sweep">plano pedagógico</span>.</h1>
-      <p class="lead">A IA já está no celular, nas tarefas e nas pesquisas dos alunos. A M7 leva inteligência artificial para dentro do colégio, do 3º ano do fundamental ao ensino médio, com uma trilha para os professores.</p>
-      <div class="x-cta"><a class="btn btn-glow" href="#conversa">Agendar uma conversa {ARROW}</a><a class="btn btn-glass" href="#trilhas">Ver as 4 trilhas</a></div>
-    </div>
-    <div class="cv-term" aria-hidden="true">
-      <div class="cv-term-top"><i></i><i></i><i></i><span>colegio.md</span></div>
-      <pre data-term>{term}</pre>
-    </div>
-  </div>
-</section>
-<div class="x-marquee" aria-hidden="true"><div class="x-track">
-  {"".join(f"<span>{w}</span>" for w in ["A arte do prompt", "Checagem de fontes", "Caça aos erros da IA", "Fake news e deepfakes", "IA para o ENEM", "Ética e autoria", "Dados e LGPD", "Livro da turma", "Demo Day"] * 2)}
-</div></div>'''
-
-
 def build(ARROW, faq, lead_form, col_faq):
-    out = {}
-    for v, hero in ((1, hero1), (2, hero2), (3, hero3)):
-        body = f'''{CSS}
-<div class="cv cv{v}">
-{hero(ARROW)}
-{proibir(v)}
-{trilhas(v)}
-{jornada(v)}
-{formato(v)}
-{ganhos(v)}
+    return f'''{CSS}
+<div class="cv cv2">
+{hero2(ARROW)}
+{lousa()}
+{proibir(2)}
+{trilhas(2)}
+{jornada(2)}
+{formato(2)}
+{ganhos(2)}
 {cta(ARROW, lead_form)}
 {faqsec(faq, col_faq)}
 </div>'''
-        out[v] = body
-    return out

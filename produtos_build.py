@@ -56,8 +56,6 @@ def vitrine(ARROW, titulo="Produtos M7", h2="Agentes de IA que a M7 já <em>empa
 </section>'''
 
 
-VERSOES_COL = {}
-
 def build(ARROW, card, faq, faq_schema, lead_form):
     # ---------------- BEM-TE-LI ----------------
     bt_faq = [
@@ -206,9 +204,7 @@ def build(ARROW, card, faq, faq_schema, lead_form):
      ("Quanto custa?", "O investimento depende do número de turmas e das trilhas escolhidas. Apresentamos a proposta na conversa, depois de entender o colégio."),
     ]
     import colegio_v
-    global VERSOES_COL
-    VERSOES_COL = colegio_v.build(ARROW, faq, lead_form, col_faq)
-    col = VERSOES_COL[1]
+    col = colegio_v.build(ARROW, faq, lead_form, col_faq)
 
     bt_schema = [faq_schema(bt_faq), {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Bem-te-li", "applicationCategory": "EducationalApplication", "operatingSystem": "Web", "description": "App que treina a leitura em voz alta de crianças de 7 a 10 anos e mede a evolução com IA.", "publisher": {"@id": "https://m7automacao.com.br/#empresa"}, "offers": [{"@type": "Offer", "name": "Família mensal", "price": "39.90", "priceCurrency": "BRL"}, {"@type": "Offer", "name": "Clínica white label", "price": "199.00", "priceCurrency": "BRL"}]}]
     col_schema = [faq_schema(col_faq), {"@context": "https://schema.org", "@type": "Course", "name": "IA no Colégio", "description": "Curso extracurricular de inteligência artificial para alunos do 3º ano do fundamental ao ensino médio e para professores.", "provider": {"@type": "Organization", "name": "M7 Automação", "sameAs": "https://m7automacao.com.br"}}]

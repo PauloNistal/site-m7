@@ -1,4 +1,4 @@
-/* IA no Colégio: 3 versões (v1 Desbloqueio, v2 Aurora, v3 Código). Mesma base do site: --void, Syne, gelo e vermelho M7. */
+/* IA no Colégio (versão Aurora, escolhida pelo Paulo). Mesma base do site: --void, Syne, gelo e vermelho M7. */
 .cv { --c-exp: #f2b35b; --c-cri: #a58bff; --c-fut: #5fd3a6; --c-pro: #ee4553; overflow-x: clip; }
 .cv .lead { color: var(--muted); max-width: 62ch; }
 .cv-ic { width: 26px; height: 26px; flex: none; }
@@ -31,13 +31,6 @@
 .cv-final { margin-top: auto; padding-top: 16px; border-top: 1px dashed var(--glass-line); font-size: .95rem; }
 .cv-final span { display: block; font: 500 .68rem/1 var(--f-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--c); margin-bottom: 8px; }
 
-/* v1: holofote que segue o mouse (spotlight cards) */
-.cv-tr-grid.g1 { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 16px; }
-.cv-spot::before { content: ""; position: absolute; inset: 0; z-index: -1; opacity: 0; transition: opacity .35s; background: radial-gradient(420px circle at var(--mx,50%) var(--my,0%), color-mix(in srgb, var(--c) 22%, transparent), transparent 45%); }
-.cv-spot::after { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px; z-index: -1; opacity: 0; transition: opacity .35s; background: radial-gradient(300px circle at var(--mx,50%) var(--my,0%), var(--c), transparent 50%); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
-[data-spot]:hover .cv-spot::before, [data-spot]:hover .cv-spot::after { opacity: 1; }
-.cv-spot { transition: transform .35s cubic-bezier(.2,.8,.2,1); } .cv-spot:hover { transform: translateY(-4px); }
-
 /* v2: bento com borda brilhante girando */
 .cv-bento { display: grid; grid-template-columns: repeat(6, minmax(0,1fr)); gap: 16px; }
 .cv-bento > :nth-child(1) { grid-column: span 4; } .cv-bento > :nth-child(2) { grid-column: span 2; }
@@ -46,18 +39,6 @@
 .cv-shine::before { content: ""; position: absolute; width: 280px; height: 280px; right: -90px; top: -110px; border-radius: 50%; z-index: -1; background: radial-gradient(circle, color-mix(in srgb, var(--c) 26%, transparent), transparent 70%); }
 @property --a { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
 @keyframes cvSpin { to { --a: 360deg; } }
-
-/* v3: linha do tempo com feixe que acompanha a rolagem */
-.cv-tl { position: relative; display: grid; gap: 22px; padding-left: 56px; max-width: 880px; }
-.cv-tl-line { position: absolute; left: 19px; top: 8px; bottom: 8px; width: 2px; background: var(--glass-line); border-radius: 2px; }
-.cv-tl-line i { position: absolute; inset: 0 0 auto 0; height: var(--p, 0%); background: linear-gradient(var(--ice), var(--ember)); border-radius: 2px; box-shadow: 0 0 18px 2px rgba(238,69,83,.45); }
-.cv-tl-item { position: relative; }
-.cv-tl-dot { position: absolute; left: -45px; top: 30px; width: 14px; height: 14px; border-radius: 50%; background: var(--void); border: 2px solid var(--glass-line); transition: .4s; }
-.cv-tl-item.lit .cv-tl-dot { border-color: var(--ember); background: var(--ember); box-shadow: 0 0 0 6px rgba(238,69,83,.15); }
-.cv-tl-card { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); column-gap: 32px; }
-.cv-tl-card .cv-tr-top, .cv-tl-card h3, .cv-tl-card .cv-tr-sub { grid-column: 1; }
-.cv-tl-card .cv-mods { grid-column: 2; grid-row: 1 / span 3; margin: 0; }
-.cv-tl-card .cv-final { grid-column: 1 / -1; }
 
 /* ---------- Jornada + regras ---------- */
 .cv-steps { list-style: none; padding: 0; margin: 0 0 56px; display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 16px; counter-reset: s; }
@@ -95,14 +76,6 @@
 .cv-sign { color: var(--muted); margin-top: 32px; font-size: .92rem; }
 
 /* =========================================================
-   V1 · Desbloqueio: partículas (capelo → M7) + texto que se decifra
-   ========================================================= */
-.cv-ban { position: relative; color: var(--muted); white-space: nowrap; }
-.cv-ban::after { content: ""; position: absolute; left: -4%; right: -4%; top: 52%; height: .09em; background: var(--ember); border-radius: 4px; transform: scaleX(0); transform-origin: left; animation: cvStrike .7s 1.1s cubic-bezier(.7,0,.2,1) forwards; }
-@keyframes cvStrike { to { transform: scaleX(1); } }
-.cv-scr { font-variant-ligatures: none; }
-
-/* =========================================================
    V2 · Aurora: luz de palco + título que surge do desfoque + chat
    ========================================================= */
 .cv-h2 { position: relative; margin-top: -84px; padding-top: 84px; overflow: hidden; isolation: isolate; text-align: center; }
@@ -136,32 +109,6 @@
 .cv-msg.ai b { color: var(--ember); }
 .cv2 .cv-vs-col.yes { background: linear-gradient(160deg, rgba(165,139,255,.14), rgba(158,180,213,.03)); }
 
-/* =========================================================
-   V3 · Código: grade com feixes + terminal que reescreve a regra
-   ========================================================= */
-.cv-h3 { position: relative; margin-top: -84px; padding-top: 84px; overflow: hidden; isolation: isolate; }
-.cv-h3-grid { display: grid; grid-template-columns: minmax(0,1.05fr) minmax(0,1fr); gap: clamp(32px, 5vw, 72px); align-items: center; padding-block: clamp(72px, 9vw, 120px) 96px; }
-.cv-beams { position: absolute; inset: 0; z-index: -1; }
-.cv-g { position: absolute; inset: 0; background-image: linear-gradient(rgba(158,180,213,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(158,180,213,.07) 1px, transparent 1px); background-size: 56px 56px; mask-image: radial-gradient(80% 70% at 50% 40%, #000 30%, transparent 80%); -webkit-mask-image: radial-gradient(80% 70% at 50% 40%, #000 30%, transparent 80%); }
-.cv-beams i { position: absolute; top: -30%; left: var(--x); width: 1px; height: 30%; background: linear-gradient(transparent, var(--ember) 70%, #fff); box-shadow: 0 0 12px 1px rgba(238,69,83,.6); opacity: .85; animation: cvBeam var(--t) var(--d) linear infinite; }
-.cv-beams i:nth-child(odd) { background: linear-gradient(transparent, var(--ice) 70%, #fff); box-shadow: 0 0 12px 1px rgba(158,180,213,.6); }
-@keyframes cvBeam { to { top: 130%; } }
-.cv-h3::after { content: ""; position: absolute; inset: auto 0 0 0; height: 160px; z-index: -1; background: linear-gradient(transparent, var(--void)); }
-.cv-h3-t { font: 800 clamp(2.6rem, 6.2vw, 5.2rem)/.98 var(--f-hero); letter-spacing: -.045em; margin: 0; text-wrap: balance; }
-.cv-sweep { background: linear-gradient(100deg, var(--muted) 30%, #fff 45%, var(--ember) 55%, var(--muted) 70%); background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: cvSweep 4.5s ease-in-out infinite; }
-@keyframes cvSweep { from { background-position: 100% 0; } to { background-position: -150% 0; } }
-.cv-lbl { color: var(--ember); }
-.cv-term { border-radius: 18px; border: 1px solid var(--glass-line); background: rgba(6,8,13,.85); box-shadow: 0 50px 120px -40px rgba(0,0,0,.9), 0 0 0 1px rgba(255,255,255,.02) inset; overflow: hidden; }
-.cv-term-top { display: flex; align-items: center; gap: 6px; padding: 12px 16px; border-bottom: 1px solid var(--glass-line); font: 500 .74rem/1 var(--f-mono); color: var(--muted); }
-.cv-term-top i { width: 10px; height: 10px; border-radius: 50%; background: #2a3342; } .cv-term-top span { margin-left: 8px; }
-.cv-term pre { margin: 0; padding: 20px 22px 24px; min-height: 300px; font: 400 clamp(.82rem, 1.3vw, .98rem)/1.8 var(--f-mono); white-space: pre-wrap; word-break: break-word; display: flex; flex-direction: column; }
-.cv-term pre span { display: block; }
-.t-c { color: #5c6b82; } .t-r { color: var(--ember); } .t-m { color: var(--muted); } .t-g { color: #7fe0b0; } .t-p { color: var(--ice-hi); }
-.cv-term pre span.del { text-decoration: line-through; text-decoration-color: var(--ember); opacity: .6; transition: opacity .4s; }
-.cv-caret { display: inline-block; width: .6em; height: 1.1em; vertical-align: -.2em; background: var(--ember); margin-left: 2px; animation: cvBlink 1s steps(1) infinite; }
-@keyframes cvBlink { 50% { opacity: 0; } }
-.cv3 .cv-vs-col.yes .cv-vs-tag { background: #7fe0b0; }
-
 /* ---------- Responsivo ---------- */
 @media (max-width: 1060px) {
   .cv-tr-grid.g1 { grid-template-columns: repeat(2, minmax(0,1fr)); }
@@ -191,5 +138,47 @@
   .cv-msg { opacity: 1; transform: none; }
 }
 .cv-form .lead-form { background: none; border: 0; padding: 0; box-shadow: none; }
-.cv-ban::after { left: -1%; right: -1%; }
-@media (max-width: 860px) { .cv-beams i { opacity: .35; } }
+
+/* ---------- Lousa: "É proibido usar IA" é apagado e vira uma rede de IA ---------- */
+.cv-lousa { position: relative; border-radius: 28px; padding: clamp(10px, 2vw, 22px); background: linear-gradient(145deg, #3a2c22, #1d1610); box-shadow: 0 50px 120px -50px rgba(0,0,0,.95), 0 0 0 1px rgba(255,255,255,.04) inset; }
+.cv-lousa svg { display: block; width: 100%; height: auto; border-radius: 18px; background: radial-gradient(120% 90% at 30% 20%, #1d3029, #0f1c18 70%); box-shadow: inset 0 0 60px rgba(0,0,0,.55); }
+.cv-lousa-chalk { position: absolute; left: 12%; bottom: 4px; width: 46px; height: 9px; border-radius: 3px; background: #ecefe8; box-shadow: 70px 1px 0 -1px #f6c9cd; }
+.cv-lousa text { font-family: var(--f-hero); }
+.lz-ban-t { font-size: 54px; font-weight: 800; letter-spacing: -.02em; fill: none; stroke: #eef2ea; stroke-width: 1.8; stroke-dasharray: 1400; stroke-dashoffset: 1400; }
+.lz-ban-u, .lz-end path { fill: none; stroke: #ee4553; stroke-width: 5; stroke-linecap: round; stroke-dasharray: 700; stroke-dashoffset: 700; }
+.lz-trail { transform: scaleX(0); transform-origin: 0 0; }
+.lz-eraser { opacity: 0; transform: translateX(-120px); }
+.lz-eraser rect { fill: #3b4658; } .lz-eraser .lz-felt { fill: #d8d2c4; }
+.lz-ln { fill: none; stroke: rgba(236,240,232,.75); stroke-width: 2.2; stroke-dasharray: 6 8; opacity: 0; }
+.lz-nd { opacity: 0; transform-box: fill-box; transform-origin: center; }
+.lz-nd circle { fill: #9eb4d5; } .lz-nd:nth-child(odd) circle { fill: #ee4553; }
+.lz-nd text { fill: #eef2ea; font-size: 26px; font-weight: 700; }
+.lz-core { fill: rgba(238,69,83,.18); stroke: #ee4553; stroke-width: 3; opacity: 0; transform-box: fill-box; transform-origin: center; }
+.lz-core-t { fill: #fff; font-size: 34px; font-weight: 800; opacity: 0; }
+.lz-pulse { fill: #fff; opacity: 0; offset-distance: 0%; filter: drop-shadow(0 0 6px #fff); }
+.lz-end text { fill: #eef2ea; font-size: 30px; font-weight: 800; opacity: 0; }
+
+.cv-lousa.play .lz-ban-t { animation: lzDraw 2s .2s ease-out forwards; }
+.cv-lousa.play .lz-ban-u { animation: lzDraw .6s 2.1s ease-out forwards; }
+.cv-lousa.play .lz-eraser { animation: lzErase 1.5s 3.2s cubic-bezier(.5,0,.5,1) forwards; }
+.cv-lousa.play .lz-trail { animation: lzTrail 1.5s 3.2s cubic-bezier(.5,0,.5,1) forwards; }
+.cv-lousa.play .lz-core, .cv-lousa.play .lz-core-t { animation: lzPop .6s 4.8s cubic-bezier(.3,1.6,.5,1) forwards; }
+.cv-lousa.play .lz-ln { animation: lzIn .5s calc(5.3s + var(--k) * .22s) forwards, lzDash 1.2s linear infinite; }
+.cv-lousa.play .lz-nd { animation: lzPop .55s calc(5.5s + var(--k) * .22s) cubic-bezier(.3,1.6,.5,1) forwards; }
+.cv-lousa.play .lz-pulse { animation: lzPulse 1.6s calc(6.8s + var(--k) * .3s) ease-in-out infinite; }
+.cv-lousa.play .lz-end text { animation: lzIn .8s 7.4s forwards; }
+.cv-lousa.play .lz-end path { animation: lzDraw .7s 7.9s ease-out forwards; }
+.cv-lousa.out svg > g { transition: opacity .6s; opacity: 0; }
+@keyframes lzDraw { to { stroke-dashoffset: 0; } }
+@keyframes lzTrail { to { transform: scaleX(1); } }
+@keyframes lzErase { 0% { opacity: 1; transform: translateX(-120px) rotate(-6deg); } 50% { transform: translateX(520px) rotate(4deg); } 92% { opacity: 1; } 100% { opacity: 0; transform: translateX(1120px) rotate(-4deg); } }
+@keyframes lzPop { from { opacity: 0; transform: scale(.2); } to { opacity: 1; transform: none; } }
+@keyframes lzIn { to { opacity: 1; } }
+@keyframes lzDash { to { stroke-dashoffset: -28; } }
+@keyframes lzPulse { 0% { opacity: 0; offset-distance: 0%; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { opacity: 0; offset-distance: 100%; } }
+@media (prefers-reduced-motion: reduce) {
+  .lz-ban, .lz-eraser { display: none; }
+  .lz-ln, .lz-nd, .lz-core, .lz-core-t, .lz-end text { opacity: 1; }
+  .lz-end path { stroke-dashoffset: 0; }
+}
+@media (max-width: 640px) { .lz-nd text { font-size: 40px; } .lz-end text { font-size: 44px; } .cv-lousa-chalk { display: none; } }
