@@ -12,6 +12,8 @@ function siteCodigo() {
   if (p.includes("residencial")) return "SITE-RES";
   if (p.includes("condominio")) return "SITE-COND";
   if (p.includes("arquitet")) return "SITE-ARQ";
+  if (p.includes("bem-te-li")) return "SITE-BEMTELI";
+  if (p.includes("colegio")) return "SITE-COLEGIO";
   return "SITE-HOME";
 }
 
@@ -254,3 +256,15 @@ const WA_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"
 
 document.querySelectorAll(".assistant").forEach(initAssistant);
 document.querySelectorAll(".wa-icon").forEach((s) => { s.outerHTML = WA_ICON; });
+
+/* Bem-te-li: destaca as palavras como se a criança estivesse lendo */
+(function () {
+  const words = document.querySelectorAll(".bt-text .r");
+  if (!words.length || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  let i = 0;
+  setInterval(() => {
+    if (i === words.length) { words.forEach((w) => w.classList.remove("on", "done")); i = 0; return; }
+    if (i > 0) { words[i - 1].classList.remove("on"); words[i - 1].classList.add("done"); }
+    words[i].classList.add("on"); i++;
+  }, 420);
+})();

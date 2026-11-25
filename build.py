@@ -164,7 +164,7 @@ def page(slug, title, desc, body, casa=False, schema=None, home=False, og_type="
         <p>Automação de processos com IA para empresas de todo o Brasil. Automação residencial e predial em São Paulo e Grande SP.</p>
         <p class="mono small">WhatsApp: (11) 96860-2016</p>
       </div>
-      <div><h4>Soluções</h4><ul><li><a href="ia-para-empresas.html">IA para empresas</a></li><li><a href="automacao-residencial.html">Automação residencial</a></li><li><a href="condominios.html">Condomínios e prédios</a></li><li><a href="arquitetos.html">Para arquitetos</a></li></ul></div>
+      <div><h4>Soluções</h4><ul><li><a href="ia-para-empresas.html">IA para empresas</a></li><li><a href="automacao-residencial.html">Automação residencial</a></li><li><a href="condominios.html">Condomínios e prédios</a></li><li><a href="arquitetos.html">Para arquitetos</a></li></ul><h4 style="margin-top:18px">Produtos</h4><ul><li><a href="bem-te-li.html">Bem-te-li</a></li><li><a href="ia-no-colegio.html">IA no Colégio</a></li></ul></div>
       <div><h4>Conteúdo</h4><ul><li><a href="https://www.youtube.com/@M7Automa%C3%A7%C3%A3o" target="_blank" rel="noopener">YouTube</a></li><li><a href="/blog">Blog</a></li><li><a href="https://www.instagram.com/m7automacao/" target="_blank" rel="noopener">Instagram</a></li><li><a href="https://linkedin.com/company/m7automacao" target="_blank" rel="noopener">LinkedIn</a></li><li><a href="https://facebook.com/m7automacao" target="_blank" rel="noopener">Facebook</a></li></ul></div>
       <div><h4>Atendimento</h4><ul><li>IA: todo o Brasil, online</li><li>Residencial e predial: São Paulo e Grande SP</li><li><a data-wa="Olá! Vim pelo site da M7 Automação.">Chamar no WhatsApp</a></li></ul></div>
     </div>
@@ -247,6 +247,8 @@ home = f'''
     </div>
   </div>
 </section>
+
+<!--VITRINE-->
 
 <section class="x-sec" style="padding-top:0">
   <div class="wrap">
@@ -363,6 +365,8 @@ ia = f'''
     </div>
   </div>
 </section>
+
+<!--VITRINE-->
 
 <section class="band alt" id="raio-x">
   <div class="wrap form-wrap">
@@ -677,11 +681,17 @@ arq = f'''
 </section>
 '''
 
+import produtos_build as _pb
+PRODUTOS = _pb.build(ARROW, card, faq, faq_schema, lead_form)
+home = home.replace("<!--VITRINE-->", _pb.vitrine(ARROW))
+ia = ia.replace("<!--VITRINE-->", _pb.vitrine(ARROW, titulo="Produtos prontos da M7", h2="Quer ver agentes de IA <em>funcionando</em>? Conheça nossos produtos.", lead="Os mesmos agentes que implantamos nas empresas, empacotados em produtos próprios da M7."))
+
 PAGES = [
   ("index.html", "M7 Automação | IA para empresas e casas inteligentes em SP", "Agentes de IA que atendem e vendem pela sua empresa e automação residencial e predial sob medida em São Paulo. Converse com nosso assistente.", home, False, None),
   ("ia-para-empresas.html", "Automação de Processos com IA para Pequenas Empresas | M7", "Agentes de IA no WhatsApp, agenda, orçamentos e integrações para micro e pequenas empresas de todo o Brasil. Faça o Raio-X de Automação gratuito.", ia, False, ia_schema),
   ("automacao-residencial.html", "Automação Residencial em São Paulo | M7 Automação", "Iluminação, som, climatização, segurança e Wi-Fi integrados. Projetos de automação residencial sob medida em São Paulo e Grande SP.", res, True, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in res_faq]}),
   ("condominios.html", "Automação para Condomínios e Prédios em SP | M7 Automação", "Controle de acesso, câmeras, economia de energia e atendimento a moradores com IA para condomínios em São Paulo e Grande SP.", con, True, faq_schema(con_faq)),
+  *PRODUTOS,
   ("arquitetos.html", "Automação para Arquitetos e Projetos de Interiores | M7", "Parceria técnica em automação, áudio e vídeo e rede para escritórios de arquitetura em São Paulo. Infraestrutura pensada desde a planta.", arq, True, faq_schema(arq_faq)),
 ]
 
